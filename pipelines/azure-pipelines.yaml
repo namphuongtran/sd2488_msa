@@ -1,0 +1,95 @@
+trigger:
+- main
+
+variables:
+
+  # Container registry service connection established during pipeline creation
+  dockerRegistryServiceConnection: 'crpisharpdeveus'
+  containerRegistry: 'crpisharpdeveus.azurecr.io'
+  imageRepository_backend: 'backend'
+  dockerfilePath_backend: '**/Dockerfile_Backend'
+  imageRepository_frontend: 'frontend'  
+  dockerfilePath_frontend: '**/Dockerfile_Frontend'
+  imageRepository_database: 'database'
+  dockerfilePath_database: '**/Dockerfile_Database'
+  tag: '$(Build.BuildNumber)-$(Build.SourceBranchName)-$(Build.BuildId)'
+
+  # Agent VM image name
+  vmImageName: 'ubuntu-latest'  
+
+stages:
+- stage: Build_BE
+  displayName: Build Backend
+  jobs:  
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          GIT_COMMIT=$(git rev-parse --short HEAD)
+          echo "GIT_COMMIT: ${GIT_COMMIT}"         
+          # set env variable to allow next task to consume
+          echo "##vso[task.setvariable variable=GIT_COMMIT]${GIT_COMMIT}"
+    - task: Docker@2
+      displayName: Build and push an image to container registry
+      inputs:
+        command: buildAndPush
+        repository: $(imageRepository_backend)
+        dockerfile: $(dockerfilePath_backend)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+          $(tag)-$(GIT_COMMIT)         
+- stage: Build_FE
+  displayName: Build Frontend
+  jobs:  
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          GIT_COMMIT=$(git rev-parse --short HEAD)
+          echo "GIT_COMMIT: ${GIT_COMMIT}"         
+          # set env variable to allow next task to consume
+          echo "##vso[task.setvariable variable=GIT_COMMIT]${GIT_COMMIT}"
+    - task: Docker@2
+      displayName: Build and push an image to container registry
+      inputs:
+        command: buildAndPush
+        repository: $(imageRepository_frontend)
+        dockerfile: $(dockerfilePath_frontend)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+          $(tag)-$(GIT_COMMIT)         
+- stage: Build_DB
+  displayName: Build Database
+  jobs:  
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          GIT_COMMIT=$(git rev-parse --short HEAD)
+          echo "GIT_COMMIT: ${GIT_COMMIT}"         
+          # set env variable to allow next task to consume
+          echo "##vso[task.setvariable variable=GIT_COMMIT]${GIT_COMMIT}"
+    - task: Docker@2
+      displayName: Build and push an image to container registry
+      inputs:
+        command: buildAndPush
+        repository: $(imageRepository_database)
+        dockerfile: $(dockerfilePath_database)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+          $(tag)-$(GIT_COMMIT)
