@@ -59,6 +59,7 @@ stages:
         tags: |
           $(tag)-$(GIT_COMMIT)
 - stage: Build_FE
+  dependsOn: Build_BE
   displayName: Build Frontend
   jobs:  
   - job: Build
