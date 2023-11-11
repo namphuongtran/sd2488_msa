@@ -43,13 +43,10 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)-$(GIT_COMMIT)         
-    - task: Docker@2
+    - script: |
+          docker run --rm \
+            $(dockerRegistry)/$(imageRepository_backend):$(tag)-$(GIT_COMMIT) trivy --exit-code 1
       displayName: Scan Backend Image with Trivy
-      inputs:
-        command: run
-        containerRegistry: $(dockerRegistryServiceConnection)
-        repository: $(imageRepository_backend)
-        commandArgs: trivy --exit-code 1 $(dockerRegistry)/$(imageRepository_backend):$(tag)-$(GIT_COMMIT)
     - task: Docker@2
       displayName: Push Backend Image
       inputs:
@@ -84,13 +81,10 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)-$(GIT_COMMIT)   
-    - task: Docker@2
-      displayName: Scan Frontend Image with Trivy
-      inputs:
-        command: run
-        containerRegistry: $(dockerRegistryServiceConnection)
-        repository: $(imageRepository_frontend)
-        commandArgs: trivy --exit-code 1 $(dockerRegistry)/$(imageRepository_frontend):$(tag)-$(GIT_COMMIT)
+    - script: |
+          docker run --rm \
+            $(dockerRegistry)/$(imageRepository_backend):$(tag)-$(GIT_COMMIT) trivy --exit-code 1
+      displayName: Scan Backend Image with Trivy
     - task: Docker@2
       displayName: Push Frontend Image
       inputs:
