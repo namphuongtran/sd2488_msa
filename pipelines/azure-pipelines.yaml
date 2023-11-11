@@ -63,6 +63,7 @@ stages:
       displayName: Scan Backend Image with Trivy
       inputs:
         version: 'latest'
+        docker: false
         image: $(containerRegistry)/$(dockerRegistryServiceConnection)/$(imageRepository_backend):$(tag)-$(GIT_COMMIT)
         severities: 'CRITICAL,HIGH'
         exitCode: '0'
@@ -114,6 +115,7 @@ stages:
       displayName: Scan Backend Image with Trivy
       inputs:
         version: 'latest'
+        docker: false
         image: $(containerRegistry)$(dockerRegistryServiceConnection)/$(imageRepository_backend):$(tag)-$(GIT_COMMIT)
         severities: 'CRITICAL,HIGH'
         exitCode: '0'
