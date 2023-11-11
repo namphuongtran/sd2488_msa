@@ -64,7 +64,7 @@ stages:
       inputs:
         version: 'latest'
         # docker: false
-        image: $(containerRegistry)/$(dockerRegistryServiceConnection)/$(imageRepository_backend):$(tag)-$(GIT_COMMIT)
+        image: $(containerRegistry)/$(imageRepository_backend):$(tag)-$(GIT_COMMIT)
         severities: 'CRITICAL,HIGH'
         exitCode: '0'
 
@@ -116,7 +116,7 @@ stages:
       inputs:
         version: 'latest'
         # docker: false
-        image: $(containerRegistry)$(dockerRegistryServiceConnection)/$(imageRepository_backend):$(tag)-$(GIT_COMMIT)
+        image: $(containerRegistry)/$(imageRepository_backend):$(tag)-$(GIT_COMMIT)
         severities: 'CRITICAL,HIGH'
         exitCode: '0'
 
