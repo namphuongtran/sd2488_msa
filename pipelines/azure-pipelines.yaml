@@ -37,7 +37,7 @@ stages:
     - task: Docker@2
       displayName: Build Backend Image
       inputs:
-        command: build
+        command: buildAndPush
         repository: $(imageRepository_backend)
         dockerfile: $(dockerfilePath_backend)
         containerRegistry: $(dockerRegistryServiceConnection)
@@ -61,14 +61,14 @@ stages:
         severities: 'CRITICAL,HIGH'
         exitCode: '0'
 
-    - task: Docker@2
-      displayName: Push Backend Image
-      inputs:
-        command: push
-        repository: $(imageRepository_backend)
-        containerRegistry: $(dockerRegistryServiceConnection)
-        tags: |
-          $(tag)-$(GIT_COMMIT)
+    # - task: Docker@2
+    #   displayName: Push Backend Image
+    #   inputs:
+    #     command: push
+    #     repository: $(imageRepository_backend)
+    #     containerRegistry: $(dockerRegistryServiceConnection)
+    #     tags: |
+    #       $(tag)-$(GIT_COMMIT)
 - stage: Build_FE
   dependsOn: Build_BE
   displayName: Build Frontend
@@ -89,13 +89,13 @@ stages:
     - task: Docker@2
       displayName: Build Frontend Image
       inputs:
-        command: build
+        command: buildAndPush
         repository: $(imageRepository_frontend)
         dockerfile: $(dockerfilePath_frontend)
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)-$(GIT_COMMIT)   
-          
+
     - task: trivy@1
       displayName: Scan Source Code
       inputs:
@@ -113,11 +113,11 @@ stages:
         severities: 'CRITICAL,HIGH'
         exitCode: '0'
 
-    - task: Docker@2
-      displayName: Push Frontend Image
-      inputs:
-        command: push
-        repository: $(imageRepository_frontend)
-        containerRegistry: $(dockerRegistryServiceConnection)
-        tags: |
-          $(tag)-$(GIT_COMMIT)
+    # - task: Docker@2
+    #   displayName: Push Frontend Image
+    #   inputs:
+    #     command: push
+    #     repository: $(imageRepository_frontend)
+    #     containerRegistry: $(dockerRegistryServiceConnection)
+    #     tags: |
+    #       $(tag)-$(GIT_COMMIT)
