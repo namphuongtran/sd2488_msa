@@ -4,7 +4,7 @@ trigger:
 variables:
 
   # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: 'crpisharpdeveus'
+  dockerRegistryServiceConnection: 'crpisharpdevase'
   containerRegistry: 'crpisharpdeveus.azurecr.io'
   imageRepository_backend: 'backend'
   dockerfilePath_backend: '**/Dockerfile_Backend'
