@@ -49,24 +49,32 @@ stages:
         dockerfile: $(dockerfilePath_backend)
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
-          $(tag)-$(GIT_COMMIT)      
-
-    - task: trivy@1
-      displayName: Scan Source Code
-      inputs:
-        version: 'latest'
-        path: './src'
-        severities: 'CRITICAL,HIGH'
-        exitCode: '0'
-  
-    - task: trivy@1
+          $(tag)-$(GIT_COMMIT)  
+          
+    - task: CmdLine@2
       displayName: Scan Backend Image with Trivy
       inputs:
-        version: 'latest'
-        # docker: false
-        image: $(containerRegistry)/$(imageRepository_backend):$(tag)-$(GIT_COMMIT)
-        severities: 'CRITICAL,HIGH'
-        exitCode: '0'
+        script: |
+          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $HOME/Library/Caches:/root/.cache/ aquasec/trivy --exit-code 0 --severity MEDIUM,HIGH --ignore-unfixed $(containerRegistry)/$(imageRepository_backend):$(tag)-$(GIT_COMMIT)
+          
+          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $HOME/Library/Caches:/root/.cache/ aquasec/trivy --exit-code 1 --severity CRITICAL --ignore-unfixed $(containerRegistry)/$(imageRepository_backend):$(tag)-$(GIT_COMMIT)
+
+    # - task: trivy@1
+    #   displayName: Scan Source Code
+    #   inputs:
+    #     version: 'latest'
+    #     path: './src'
+    #     severities: 'CRITICAL,HIGH'
+    #     exitCode: '0'
+  
+    # - task: trivy@1
+    #   displayName: Scan Backend Image with Trivy
+    #   inputs:
+    #     version: 'latest'
+    #     # docker: false
+    #     image: $(containerRegistry)/$(imageRepository_backend):$(tag)-$(GIT_COMMIT)
+    #     severities: 'CRITICAL,HIGH'
+    #     exitCode: '0'
 
     # - task: Docker@2
     #   displayName: Push Backend Image
@@ -101,24 +109,32 @@ stages:
         dockerfile: $(dockerfilePath_frontend)
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
-          $(tag)-$(GIT_COMMIT)   
-
-    - task: trivy@1
-      displayName: Scan Source Code
-      inputs:
-        version: 'latest'
-        path: './src'
-        severities: 'CRITICAL,HIGH'
-        exitCode: '0'
-
-    - task: trivy@1
+          $(tag)-$(GIT_COMMIT)
+          
+    - task: CmdLine@2
       displayName: Scan Backend Image with Trivy
       inputs:
-        version: 'latest'
-        # docker: false
-        image: $(containerRegistry)/$(imageRepository_backend):$(tag)-$(GIT_COMMIT)
-        severities: 'CRITICAL,HIGH'
-        exitCode: '0'
+        script: |
+          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $HOME/Library/Caches:/root/.cache/ aquasec/trivy --exit-code 0 --severity MEDIUM,HIGH --ignore-unfixed $(containerRegistry)/$(imageRepository_backend):$(tag)-$(GIT_COMMIT)
+          
+          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $HOME/Library/Caches:/root/.cache/ aquasec/trivy --exit-code 1 --severity CRITICAL --ignore-unfixed $(containerRegistry)/$(imageRepository_backend):$(tag)-$(GIT_COMMIT)
+
+    # - task: trivy@1
+    #   displayName: Scan Source Code
+    #   inputs:
+    #     version: 'latest'
+    #     path: './src'
+    #     severities: 'CRITICAL,HIGH'
+    #     exitCode: '0'
+
+    # - task: trivy@1
+    #   displayName: Scan Backend Image with Trivy
+    #   inputs:
+    #     version: 'latest'
+    #     # docker: false
+    #     image: $(containerRegistry)/$(imageRepository_backend):$(tag)-$(GIT_COMMIT)
+    #     severities: 'CRITICAL,HIGH'
+    #     exitCode: '0'
 
     # - task: Docker@2
     #   displayName: Push Frontend Image
