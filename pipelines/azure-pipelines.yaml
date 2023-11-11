@@ -42,7 +42,13 @@ stages:
         dockerfile: $(dockerfilePath_backend)
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
-          $(tag)-$(GIT_COMMIT)     
+          $(tag)-$(GIT_COMMIT) 
+
+    - task: Docker@2
+      displayName: Login to ACR
+      inputs:
+        command: login
+        containerRegistry: $(dockerRegistryServiceConnection)    
 
     - task: trivy@1
       displayName: Scan Source Code
@@ -56,7 +62,6 @@ stages:
       displayName: Scan Backend Image with Trivy
       inputs:
         version: 'latest'
-        loginDockerConfig: true
         image: $(containerRegistry)/$(imageRepository_backend):$(tag)-$(GIT_COMMIT)
         severities: 'CRITICAL,HIGH'
         exitCode: '0'
