@@ -5,7 +5,7 @@ variables:
 
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: 'crpisharpdevase'
-  containerRegistry: 'crpisharpdeveus.azurecr.io'
+  containerRegistry: 'crpisharpdevase.azurecr.io'
   imageRepository_backend: 'backend'
   dockerfilePath_backend: '**/Dockerfile_Backend'
   imageRepository_frontend: 'frontend'  
@@ -63,7 +63,7 @@ stages:
       displayName: Scan Backend Image with Trivy
       inputs:
         version: 'latest'
-        docker: false
+        # docker: false
         image: $(containerRegistry)/$(dockerRegistryServiceConnection)/$(imageRepository_backend):$(tag)-$(GIT_COMMIT)
         severities: 'CRITICAL,HIGH'
         exitCode: '0'
@@ -115,7 +115,7 @@ stages:
       displayName: Scan Backend Image with Trivy
       inputs:
         version: 'latest'
-        docker: false
+        # docker: false
         image: $(containerRegistry)$(dockerRegistryServiceConnection)/$(imageRepository_backend):$(tag)-$(GIT_COMMIT)
         severities: 'CRITICAL,HIGH'
         exitCode: '0'
