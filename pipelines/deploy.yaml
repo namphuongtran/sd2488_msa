@@ -1,7 +1,7 @@
 # TODO: Will be separate azure pipeline to build and deploy later
 stages:
 - stage: Deploy
-  displayName: Deploy application stage
+  displayName: Deploy Application to AKS
   dependsOn: Build
   jobs:
   - deployment: Deploy
@@ -17,7 +17,7 @@ stages:
           - task: DownloadPipelineArtifact@2
             inputs:
               artifactName: 'manifests'
-              downloadPath: '$(System.ArtifactsDirectory)/manifests'
+              downloadPath: '$(System.ArtifactsDirectory)'
 
           - script: |
               ls -la $(System.ArtifactsDirectory)/manifests

@@ -19,7 +19,7 @@ variables:
 
 stages:
 - stage: Build
-  displayName: Build Backend
+  displayName: Build Application and Push to ACR
   jobs:  
   - job: Build
     displayName: Build
