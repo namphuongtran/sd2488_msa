@@ -4,7 +4,6 @@ stages:
   displayName: Deploy application stage
   dependsOn: Build
   jobs:
-  - deployment: Deploy
     displayName: Deploy job
     pool:
       vmImage: 'windows-latest'
