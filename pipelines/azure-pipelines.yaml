@@ -64,20 +64,11 @@ stages:
       inputs:
         version: 'latest'
         loginDockerConfig: true
-        # docker: false
         image: $(containerRegistry)/$(imageRepository_backend):$(tag)-$(GIT_COMMIT)
         severities: 'CRITICAL,HIGH'
         exitCode: '0'
         options: --timeout 15m
 
-    # - task: Docker@2
-    #   displayName: Push Backend Image
-    #   inputs:
-    #     command: push
-    #     repository: $(imageRepository_backend)
-    #     containerRegistry: $(dockerRegistryServiceConnection)
-    #     tags: |
-    #       $(tag)-$(GIT_COMMIT)
 - stage: Build_FE
   dependsOn: Build_BE
   displayName: Build Frontend
@@ -125,17 +116,9 @@ stages:
       inputs:
         version: 'latest'
         loginDockerConfig: true
-        # docker: false
         image: $(containerRegistry)/$(imageRepository_backend):$(tag)-$(GIT_COMMIT)
         severities: 'CRITICAL,HIGH'
         exitCode: '0'
         options: --timeout 15m
 
-    # - task: Docker@2
-    #   displayName: Push Frontend Image
-    #   inputs:
-    #     command: push
-    #     repository: $(imageRepository_frontend)
-    #     containerRegistry: $(dockerRegistryServiceConnection)
-    #     tags: |
-    #       $(tag)-$(GIT_COMMIT)
+- template: deploy.yaml # Template reference to cd.yml

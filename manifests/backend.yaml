@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: msa/backend:v1
+        image: crpisharpdevase.azurecr.io/backend:20231112.3-main-123-5a319b6
         imagePullPolicy: Always
         ports:
         - containerPort: 3000

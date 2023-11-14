@@ -1,11 +1,13 @@
 # TODO: Will be separate azure pipeline to build and deploy later
 stages:
 - stage: Deploy
-  displayName: Deploy stage
+  displayName: Deploy application stage
   dependsOn: Build
   jobs:
   - deployment: Deploy
     displayName: Deploy job
+    pool:
+      vmImage: 'windows-latest'
     environment: 'test'
     strategy:
       runOnce:
@@ -19,16 +21,25 @@ stages:
 
           - script: |
               ls -la $(System.ArtifactsDirectory)/manifests
-              cat $(System.ArtifactsDirectory)/manifests/deployment.yml
-              cat $(System.ArtifactsDirectory)/manifests/service.yml
+              cat $(System.ArtifactsDirectory)/manifests/backend.yaml
+              cat $(System.ArtifactsDirectory)/manifests/frontend.yaml
+
+          - task: KubernetesManifest@0
+            displayName: Deploy Backend to Kubernetes cluster
+            inputs:
+              action: deploy
+              connectionType: 'kubernetesServiceConnection'
+              kubernetesServiceConnection: 'aks-pisharp-dev-ase'
+              namespace: backend
+              manifests: |
+                $(System.ArtifactsDirectory)/manifests/backend.yaml
 
           - task: KubernetesManifest@0
             displayName: Deploy to Kubernetes cluster
             inputs:
               action: deploy
               connectionType: 'kubernetesServiceConnection'
-              kubernetesServiceConnection: 'demotraining'
-              namespace: demo
+              kubernetesServiceConnection: 'aks-pisharp-dev-ase'
+              namespace: frontend
               manifests: |
-                $(System.ArtifactsDirectory)/manifests/deployment.yml
-                $(System.ArtifactsDirectory)/manifests/service.yml
+                $(System.ArtifactsDirectory)/manifests/frontend.yaml
