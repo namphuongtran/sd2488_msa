@@ -7,7 +7,7 @@ stages:
   - deployment: Deploy
     displayName: Deploy job
     pool:
-      vmImage: 'windows-latest'
+      vmImage: 'ubuntu-latest'
     environment: 'dev'
     strategy:
       runOnce:
@@ -35,7 +35,7 @@ stages:
                 $(System.ArtifactsDirectory)/manifests/backend.yaml
 
           - task: KubernetesManifest@0
-            displayName: Deploy to Kubernetes cluster
+            displayName: Deploy Frontend to Kubernetes cluster
             inputs:
               action: deploy
               connectionType: 'kubernetesServiceConnection'
