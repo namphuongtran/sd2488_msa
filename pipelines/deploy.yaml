@@ -4,7 +4,8 @@ stages:
   displayName: Deploy application stage
   dependsOn: Build
   jobs:
-    displayName: Deploy job
+  - job: Release
+    displayName: Deploy k8s and application
     pool:
       vmImage: 'windows-latest'
     strategy:
