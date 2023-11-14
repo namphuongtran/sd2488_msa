@@ -120,5 +120,10 @@ stages:
         severities: 'CRITICAL,HIGH'
         exitCode: '0'
         options: --timeout 15m
+    
+    - task: PublishPipelineArtifact@1
+      inputs:
+        artifactName: 'manifests'
+        path: '$(Build.SourcesDirectory)'
 
 - template: deploy.yaml # Template reference to cd.yml
