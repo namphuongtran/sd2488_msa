@@ -8,7 +8,7 @@ stages:
     displayName: Deploy job
     pool:
       vmImage: 'windows-latest'
-    environment: 'test'
+    environment: 'dev'
     strategy:
       runOnce:
         deploy:

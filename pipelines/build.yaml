@@ -1,6 +1,6 @@
 # TODO: Will be separate azure pipeline to build and deploy later
 stages:
-- stage: Build_BE
+- stage: Build
   displayName: Build Backend
   jobs:
   - job: Build
